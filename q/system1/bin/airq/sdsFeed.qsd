@@ -1,0 +1,11 @@
+[group]
+  #/C/ destination server name, should be tickHF
+  cfg.dst = <type(SYMBOL), isComponent()>
+  #/C/ Time of the eod trigger
+  cfg.eodTime = <type(TIME), default(00:00:00.000)>
+  #/C/ pin read period in ms
+  cfg.port = <type(SYMBOL), default(/dev/ttyUSB0)>
+  
+[table]
+[user]
+[userGroup]
