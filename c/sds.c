@@ -86,8 +86,18 @@ int get_pm(int fd,uint16_t* pm25,uint16_t* pm10)
       if(size==!1) return -1; // probably can't happen with this port configuration		
     }
     
-    ssize_t size = read(fd,buf,MESSAGE_SIZE);
-    if(size!=MESSAGE_SIZE) return -2;
+    // ssize_t size = read(fd,buf,MESSAGE_SIZE); this may return partial message, see http://www.linux-mag.com/id/308/
+
+    int remaining = MESSAGE_SIZE;
+    uint8_t* curr_buf = buf;
+    while(remaining)
+    {
+      ssize_t size = read(fd,curr_buf,remaining);
+      if(size<0) return -2; // error
+      remaining-=size;
+      curr_buf+=size;
+    } 
+
     if(buf[MESSAGE_SIZE-1]!=0xAB) return -3; // last byte should be the message tail
     
     uint16_t checksum = buf[1]+buf[2]+buf[3]+buf[4]+buf[5]+buf[6];
